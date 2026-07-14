@@ -37,9 +37,6 @@ int get_valid_int(int min, int max)
         result = scanf("%d", &value);
         if (result == 1 && value >= min && value <= max)
         {
-            /* 消费掉残留的换行符 */
-            while ((c = getchar()) != '\n' && c != EOF)
-                ;
             return value;
         }
         /* 清除无效输入 */

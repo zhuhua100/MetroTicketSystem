@@ -110,6 +110,9 @@ int init_data_files(void);
 
 /* 历史记录 */
 void show_history(void);
+int delete_order_by_id(int order_id);
+int delete_all_orders(void);
+int save_all_orders(void);
 
 /* 复杂查询 */
 void search_menu(void);

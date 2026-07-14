@@ -1,0 +1,28 @@
+# 编译输出
+*.obj
+*.exe
+*.ilk
+*.pdb
+*.idb
+*.pch
+*.sdf
+*.log
+*.tlog
+*.lastbuildstate
+*.manifest
+*.res
+*.exp
+*.lib
+*.sbr
+*.bsc
+
+# VS 配置
+.vs/
+*.suo
+*.user
+*.sln.docstates
+
+# 临时文件
+*.tmp
+*.bak
+*.swp

@@ -223,6 +223,102 @@ int load_orders_from_bin(void)
     return 0;
 }
 
+/* 将所有订单重新写入文件（覆盖写入） */
+int save_all_orders(void)
+{
+    FILE *fp;
+    int i;
+
+    /* 重写TXT文件 */
+    fp = fopen("data/order.txt", "w");
+    if (fp == NULL)
+    {
+        printf("错误：无法打开订单文件！\n");
+        return -1;
+    }
+
+    for (i = 0; i < order_count; i++)
+    {
+        fprintf(fp, "%d,%s,%d,%d,%d,%d,%d,%d\n",
+                orders[i].order_id, orders[i].time,
+                orders[i].start_id, orders[i].end_id,
+                orders[i].price, orders[i].num,
+                orders[i].total_money, orders[i].change);
+    }
+    fclose(fp);
+
+    /* 重写BIN文件 */
+    fp = fopen("data/order.dat", "wb");
+    if (fp == NULL)
+    {
+        printf("错误：无法打开二进制订单文件！\n");
+        return -1;
+    }
+
+    fwrite(orders, sizeof(Order), order_count, fp);
+    fclose(fp);
+
+    return 0;
+}
+
+/* 删除指定ID的订单 */
+int delete_order_by_id(int order_id)
+{
+    int i, j;
+    int found = 0;
+
+    for (i = 0; i < order_count; i++)
+    {
+        if (orders[i].order_id == order_id)
+        {
+            found = 1;
+            /* 将后面的订单前移 */
+            for (j = i; j < order_count - 1; j++)
+            {
+                orders[j] = orders[j + 1];
+            }
+            order_count--;
+            break;
+        }
+    }
+
+    if (!found)
+    {
+        printf("未找到编号为 %d 的订单！\n", order_id);
+        return -1;
+    }
+
+    /* 更新文件 */
+    if (save_all_orders() != 0)
+    {
+        return -1;
+    }
+
+    printf("订单 %d 已删除！\n", order_id);
+    return 0;
+}
+
+/* 删除全部订单 */
+int delete_all_orders(void)
+{
+    FILE *fp;
+
+    order_count = 0;
+
+    /* 清空TXT文件 */
+    fp = fopen("data/order.txt", "w");
+    if (fp != NULL)
+        fclose(fp);
+
+    /* 清空BIN文件 */
+    fp = fopen("data/order.dat", "wb");
+    if (fp != NULL)
+        fclose(fp);
+
+    printf("所有订单已删除！\n");
+    return 0;
+}
+
 /* 加载订单 */
 int load_orders(void)
 {

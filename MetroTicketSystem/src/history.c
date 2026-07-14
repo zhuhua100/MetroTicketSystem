@@ -56,7 +56,6 @@ void show_history(void)
             {
                 printf("  暂无记录可删除。\n");
                 printf("  按 Enter 键继续...\n");
-                clear_input_buffer();
                 getchar();
             }
             else
@@ -65,7 +64,6 @@ void show_history(void)
                 del_id = get_valid_int(1, 999999);
                 delete_order_by_id(del_id);
                 printf("  按 Enter 键继续...\n");
-                clear_input_buffer();
                 getchar();
             }
             break;
@@ -75,14 +73,15 @@ void show_history(void)
             {
                 printf("  暂无记录可删除。\n");
                 printf("  按 Enter 键继续...\n");
-                clear_input_buffer();
                 getchar();
             }
             else
             {
                 printf("  确定要删除所有记录吗？(y/n): ");
                 char confirm = getchar();
-                clear_input_buffer();
+                /* 消费掉残留的换行符 */
+                while (getchar() != '\n')
+                    ;
                 if (confirm == 'y' || confirm == 'Y')
                 {
                     delete_all_orders();

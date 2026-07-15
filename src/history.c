@@ -81,8 +81,8 @@ void show_history(void)
             else
             {
                 printf("  确定要删除所有记录吗？(y/n): ");
-                char confirm = getchar();
                 clear_input_buffer();
+                char confirm = getchar();
                 if (confirm == 'y' || confirm == 'Y')
                 {
                     delete_all_orders();

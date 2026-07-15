@@ -22,7 +22,12 @@
 *.user
 *.sln.docstates
 
+# 数据文件（保留示例数据，忽略运行时生成的数据）
+# data/order.txt
+# data/order.dat
+
 # 临时文件
 *.tmp
 *.bak
 *.swp
+

@@ -138,14 +138,16 @@ void search_menu(void)
             fgets(name_keyword, sizeof(name_keyword), stdin);
             name_keyword[strcspn(name_keyword, "\n")] = '\0';
 
-            /* 条件3: 票价范围 */
+            /* 条件3: 最低票价 */
             printf("条件3 - 最低票价(0=不限): ");
             price_min = get_valid_int(0, 100);
-            printf("条件3 - 最高票价(0=不限): ");
+
+            /* 条件4: 最高票价 */
+            printf("条件4 - 最高票价(0=不限): ");
             price_max = get_valid_int(0, 100);
 
-            /* 条件4: 是否换乘 */
-            printf("条件4 - 是否仅换乘站(0=不限, 1=仅换乘站): ");
+            /* 条件5: 是否换乘 */
+            printf("条件5 - 是否仅换乘站(0=不限, 1=仅换乘站): ");
             transfer_only = get_valid_int(0, 1);
 
             printf("\n========================================\n");

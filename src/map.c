@@ -162,7 +162,7 @@ static void search_station_by_name(void)
     printf("\n");
     printf("----------------------------------------\n");
     printf("  请输入站点名称: ");
-    scanf("%s", name);
+    scanf("%19s", name);
     clear_input_buffer();
 
     printf("\n  查询结果:\n");

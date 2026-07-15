@@ -5,7 +5,7 @@ echo  编译 AI方案对比实验
 echo ========================================
 echo.
 
-set "PROJ_DIR=d:\桌面\MetroTicketSystem"
+set "PROJ_DIR=d:\桌面\MetroTicketSystem\v1.0"
 set "VC_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207"
 set "KITS_DIR=C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0"
 set "KITS_LIB=C:\Program Files (x86)\Windows Kits\10\Lib\10.0.26100.0"

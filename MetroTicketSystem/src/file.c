@@ -103,10 +103,40 @@ int load_stations(void)
     return 0;
 }
 
+/* 加载线路数据 */
+int load_lines(void)
+{
+    FILE *fp;
+    line_count = 0;
+
+    fp = fopen("data/line.txt", "r");
+    if (fp == NULL)
+    {
+        printf("错误：无法打开线路数据文件！\n");
+        return -1;
+    }
+
+    while (fscanf(fp, "%d,%[^,],%d",
+                  &lines[line_count].line_id,
+                  lines[line_count].line_name,
+                  &lines[line_count].station_count) == 3)
+    {
+        line_count++;
+        if (line_count >= MAX_LINES)
+            break;
+    }
+
+    fclose(fp);
+    return 0;
+}
+
 /* 加载所有数据 */
 int load_data(void)
 {
     if (load_stations() != 0)
+        return -1;
+
+    if (load_lines() != 0)
         return -1;
 
     load_orders();

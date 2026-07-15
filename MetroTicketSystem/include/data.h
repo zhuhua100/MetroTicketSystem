@@ -104,6 +104,7 @@ int process_payment(int total);
 
 /* 文件管理 */
 int load_data(void);
+int load_lines(void);
 int save_order_to_file(const Order *order);
 int load_orders(void);
 int init_data_files(void);

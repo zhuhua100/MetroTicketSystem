@@ -31,5 +31,3 @@
 *.bak
 *.swp
 
-# 构建脚本输出
-build.bat

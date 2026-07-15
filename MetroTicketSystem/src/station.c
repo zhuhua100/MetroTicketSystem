@@ -56,36 +56,3 @@ void list_stations(void)
     }
     printf("========================================\n");
 }
-
-/* 显示地图（控制台版本） */
-void show_map(void)
-{
-    int i;
-
-    printf("\n");
-    printf("========================================\n");
-    printf("          地铁线路图                  \n");
-    printf("========================================\n");
-    printf("\n");
-
-    /* 按线路显示 */
-    for (i = 0; i < station_count; i++)
-    {
-        if (i == 0 || stations[i].line_id != stations[i - 1].line_id)
-        {
-            printf("\n--- 线路%d ---\n", stations[i].line_id);
-        }
-        printf("  [%d] %s", stations[i].station_id, stations[i].station_name);
-        if (stations[i].is_transfer)
-        {
-            printf(" (换乘站)");
-        }
-        printf("\n");
-    }
-
-    printf("\n");
-    printf("========================================\n");
-    printf("按 Enter 键返回主菜单...\n");
-    clear_input_buffer();
-    getchar();
-}

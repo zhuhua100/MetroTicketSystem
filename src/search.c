@@ -119,36 +119,112 @@ void search_menu(void)
         break;
 
     case 5:
-        /* 组合查询 */
-        printf("\n【组合查询】\n");
-        printf("请输入线路编号(0=不限): ");
-        line_id = get_valid_int(0, line_count > 0 ? line_count : 3);
-
-        printf("是否仅查询换乘站(0=不限, 1=仅换乘站): ");
-        int transfer_only = get_valid_int(0, 1);
-
-        printf("\n查询结果:\n");
-        found = 0;
-        for (i = 0; i < station_count; i++)
+        /* 组合查询 - 支持线路+站点名称+票价+换乘四条件 */
         {
-            int match = 1;
-            if (line_id > 0 && stations[i].line_id != line_id)
-                match = 0;
-            if (transfer_only && !stations[i].is_transfer)
-                match = 0;
+            int transfer_only;
+            int price_min, price_max;
+            char name_keyword[20] = "";
 
-            if (match)
+            printf("\n【组合查询 - 四条件筛选】\n");
+            printf("========================================\n");
+
+            /* 条件1: 线路 */
+            printf("条件1 - 线路编号(0=不限): ");
+            line_id = get_valid_int(0, line_count > 0 ? line_count : 3);
+
+            /* 条件2: 站点名称 */
+            printf("条件2 - 站点关键词(直接回车=不限): ");
+            clear_input_buffer();
+            fgets(name_keyword, sizeof(name_keyword), stdin);
+            name_keyword[strcspn(name_keyword, "\n")] = '\0';
+
+            /* 条件3: 票价范围 */
+            printf("条件3 - 最低票价(0=不限): ");
+            price_min = get_valid_int(0, 100);
+            printf("条件3 - 最高票价(0=不限): ");
+            price_max = get_valid_int(0, 100);
+
+            /* 条件4: 是否换乘 */
+            printf("条件4 - 是否仅换乘站(0=不限, 1=仅换乘站): ");
+            transfer_only = get_valid_int(0, 1);
+
+            printf("\n========================================\n");
+            printf("查询条件: ");
+            if (line_id > 0)
+                printf("线路%d ", line_id);
+            if (strlen(name_keyword) > 0)
+                printf("关键词[%s] ", name_keyword);
+            if (price_min > 0)
+                printf("票价>=%d ", price_min);
+            if (price_max > 0)
+                printf("票价<=%d ", price_max);
+            if (transfer_only)
+                printf("换乘站");
+            if (line_id == 0 && strlen(name_keyword) == 0 && price_min == 0 && price_max == 0 && !transfer_only)
+                printf("(无限制)");
+            printf("\n");
+            printf("========================================\n");
+
+            /* 先查站点匹配 */
+            printf("\n【站点查询结果】\n");
+            found = 0;
+            for (i = 0; i < station_count; i++)
             {
-                printf("  [%d] %s (线路%d)%s\n",
-                       stations[i].station_id,
-                       stations[i].station_name,
-                       stations[i].line_id,
-                       stations[i].is_transfer ? " [换乘站]" : "");
-                found = 1;
+                int match = 1;
+
+                /* 线路条件 */
+                if (line_id > 0 && stations[i].line_id != line_id)
+                    match = 0;
+
+                /* 名称关键词条件 */
+                if (strlen(name_keyword) > 0 && strstr(stations[i].station_name, name_keyword) == NULL)
+                    match = 0;
+
+                /* 换乘条件 */
+                if (transfer_only && !stations[i].is_transfer)
+                    match = 0;
+
+                if (match)
+                {
+                    printf("  [%d] %s (线路%d)%s\n",
+                           stations[i].station_id,
+                           stations[i].station_name,
+                           stations[i].line_id,
+                           stations[i].is_transfer ? " [换乘站]" : "");
+                    found = 1;
+                }
+            }
+            if (!found)
+                printf("  未找到匹配的站点。\n");
+
+            /* 再查订单匹配（票价条件） */
+            if (price_min > 0 || price_max > 0)
+            {
+                printf("\n【订单查询结果】\n");
+                found = 0;
+                for (i = 0; i < order_count; i++)
+                {
+                    int match = 1;
+
+                    if (price_min > 0 && orders[i].price < price_min)
+                        match = 0;
+                    if (price_max > 0 && orders[i].price > price_max)
+                        match = 0;
+
+                    if (match)
+                    {
+                        printf("  订单%d: %s 起点%d->终点%d 单价%d元 数量%d 总价%d\n",
+                               orders[i].order_id, orders[i].time,
+                               orders[i].start_id, orders[i].end_id,
+                               orders[i].price, orders[i].num,
+                               orders[i].total_money);
+                        found = 1;
+                    }
+                }
+                if (!found)
+                    printf("  未找到匹配的订单。\n");
             }
         }
-        if (!found)
-            printf("  未找到匹配的站点。\n");
         break;
 
     case 6:

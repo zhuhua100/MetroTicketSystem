@@ -149,11 +149,25 @@ int save_order_to_txt(const Order *order)
 {
     FILE *fp;
 
+    /* Bug4: 文件不存在时自动创建 */
     fp = fopen("data/order.txt", "a");
     if (fp == NULL)
     {
-        printf("错误：无法打开订单文件！\n");
-        return -1;
+        /* 尝试创建文件 */
+        fp = fopen("data/order.txt", "w");
+        if (fp == NULL)
+        {
+            printf("错误：无法创建订单文件！\n");
+            return -1;
+        }
+        fclose(fp);
+        /* 重新以追加模式打开 */
+        fp = fopen("data/order.txt", "a");
+        if (fp == NULL)
+        {
+            printf("错误：无法打开订单文件！\n");
+            return -1;
+        }
     }
 
     fprintf(fp, "%d,%s,%d,%d,%d,%d,%d,%d\n",
@@ -171,11 +185,25 @@ int save_order_to_bin(const Order *order)
 {
     FILE *fp;
 
+    /* Bug4: 文件不存在时自动创建 */
     fp = fopen("data/order.dat", "ab");
     if (fp == NULL)
     {
-        printf("错误：无法打开二进制订单文件！\n");
-        return -1;
+        /* 尝试创建文件 */
+        fp = fopen("data/order.dat", "wb");
+        if (fp == NULL)
+        {
+            printf("错误：无法创建二进制订单文件！\n");
+            return -1;
+        }
+        fclose(fp);
+        /* 重新以追加模式打开 */
+        fp = fopen("data/order.dat", "ab");
+        if (fp == NULL)
+        {
+            printf("错误：无法打开二进制订单文件！\n");
+            return -1;
+        }
     }
 
     fwrite(order, sizeof(Order), 1, fp);

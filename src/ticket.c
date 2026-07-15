@@ -86,6 +86,39 @@ void buy_ticket(void)
     total = price * num;
     printf("  总价: %d 元\n", total);
 
+    /* Bug5: 重复购票检查 - 检查当天是否有相同路线的订单 */
+    {
+        int i;
+        char today[11] = {0};
+        char order_day[11] = {0};
+        time_t t = time(NULL);
+        struct tm *tm_info = localtime(&t);
+        strftime(today, sizeof(today), "%Y-%m-%d", tm_info);
+
+        for (i = 0; i < order_count; i++)
+        {
+            /* 提取订单日期的年月日部分 */
+            strncpy(order_day, orders[i].time, 10);
+            order_day[10] = '\0';
+
+            if (orders[i].start_id == start_id &&
+                orders[i].end_id == end_id &&
+                strcmp(order_day, today) == 0)
+            {
+                printf("\n  【提示】您今天已购买过相同路线的车票！\n");
+                printf("  是否继续购买？(y/n): ");
+                clear_input_buffer();
+                confirm = getchar();
+                if (confirm != 'y' && confirm != 'Y')
+                {
+                    printf("购票已取消。\n");
+                    return;
+                }
+                break;
+            }
+        }
+    }
+
     /* 确认购票 */
     printf("\n是否确认购票？(y/n): ");
     clear_input_buffer();
